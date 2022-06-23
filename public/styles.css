@@ -1,0 +1,148 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box
+}
+
+:root {
+  --bgColor: #FFF8DC;
+  --borderColor: #E1C16E;
+  --size: 5rem;
+  --Xcolor: 	#DAA520;
+  --Ocolor: #8B8000;
+  --playerFontColor:#804000;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bgColor);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.container {
+  border-spacing: 0;
+  align-self: center;
+}
+
+.board {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(3, auto);
+}
+
+.cell {
+  min-width: var(--size);
+  height: var(--size);
+  padding: calc(var(--size) * 0.175);
+  border: 3px solid var(--borderColor);
+}
+
+.row *:nth-child(2n+1) {
+  border-left: none;
+  border-top: none;
+  border-right: none;
+}
+
+.row .cell:nth-child(2) {
+  border-top: none;
+}
+
+.row:last-child .cell {
+  border-bottom: none;
+}
+
+.cell svg {
+  width: var(--size);
+  height: var(--size);
+  stroke-width: 3px;
+  overflow: visible;
+}
+
+.X {
+  display: none;
+  stroke: var(var(--Xcolor));
+  stroke-dasharray: 36, 36;
+  stroke-dashoffset: 36;
+  transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.O {
+  display: none;
+  stroke: var(var(--Ocolor));
+  stroke-dasharray: 76, 76;
+  stroke-dashoffset: 76;
+  transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.select-player {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding:  0.3rem;
+  background-color: var(--borderColor);
+  border: 2px solid var(--bgColor);
+  border-radius: 5px;
+  color: var(--playerFontColor);
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+}
+
+.player-option {
+  background-color: #ffff;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.25rem;
+  padding: 5px;
+  border-right: 2px solid var(--borderColor);
+}
+
+.icon svg {
+  width: 90%;
+  height: 90%;
+  stroke-width: 3px;
+  overflow: visible;
+  display: block;
+  stroke-dasharray: none;
+  stroke-dashoffset: none;
+  transition: none;
+}
+
+.reset-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.85rem;
+  background-color: var(--playerFontColor);
+  color: #ffff;
+  font-family: sans-serif;
+  padding: 6px;
+  border: 2px solid var(--playerFontColor);
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer
+}
+
+.winner {
+  display: none;
+  position: absolute;
+  bottom: 3rem;
+  color: #ffff;
+  font-size: 2.5rem;
+  gap: 0.5rem
+}
+
+.winner .icon {
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem
+}
