@@ -1,20 +1,19 @@
-*,
-*::after,
-*::before {
-  box-sizing: border-box
-}
-
 :root {
   --bgColor: #FFF8DC;
   --borderColor: #E1C16E;
-  --size: 5rem;
-  --Xcolor: 	#DAA520;
+  --size: 8rem;
+  --Xcolor: #DAA520;
   --Ocolor: #8B8000;
-  --playerFontColor:#804000;
+  --playerFontColor: #804000;
+  --fontSize: 0.85rem
+}
+
+* {
+  margin: 0;
+  padding: 0
 }
 
 body {
-  margin: 0;
   background-color: var(--bgColor);
   width: 100vw;
   height: 100vh;
@@ -26,15 +25,6 @@ body {
 .container {
   border-spacing: 0;
   align-self: center;
-}
-
-.board {
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  justify-items: center;
-  align-items: center;
-  grid-template-columns: repeat(3, auto);
 }
 
 .cell {
@@ -67,16 +57,16 @@ body {
 
 .X {
   display: none;
-  stroke: var(var(--Xcolor));
-  stroke-dasharray: 36, 36;
+  stroke: var(--Xcolor);
+  stroke-dasharray: 36 36;
   stroke-dashoffset: 36;
   transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .O {
   display: none;
-  stroke: var(var(--Ocolor));
-  stroke-dasharray: 76, 76;
+  stroke: var(--Ocolor);
+  stroke-dasharray: 76 76;
   stroke-dashoffset: 76;
   transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -85,18 +75,27 @@ body {
   position: absolute;
   top: 1rem;
   left: 1rem;
-  padding:  0.3rem;
+  padding: 0.3rem;
   background-color: var(--borderColor);
   border: 2px solid var(--bgColor);
   border-radius: 5px;
   color: var(--playerFontColor);
-  font-size: 0.85rem;
+  font-size: var(--fontSize);
   font-weight: 600;
   display: block;
 }
 
 .player-option {
   background-color: #ffff;
+}
+
+.score-card {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  position: absolute;
+  top: 1rem;
+  left: 10rem;
 }
 
 .icon {
@@ -117,11 +116,34 @@ body {
   transition: none;
 }
 
+.score-card > div {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid var(--borderColor);
+  border-radius: 5px;
+  height: 1.75rem;
+  cursor: pointer;
+}
+
+.score-card > .player-active {
+  border-bottom-width: 2px;
+}
+
+.score {
+  display: flex;
+  width: 2rem;
+  justify-content: center;
+  align-items: center;
+  color: var(--playerFontColor);
+  font-size: var(--fontSize);
+  font-weight: 600;
+}
+
 .reset-button {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  font-size: 0.85rem;
+  font-size: var(--fontSize);
   background-color: var(--playerFontColor);
   color: #ffff;
   font-family: sans-serif;

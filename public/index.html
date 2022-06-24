@@ -16,30 +16,41 @@
       <option class="player-option" value="computer">Computer</option>
       <option class="player-option" value="human">Friend</option>
     </select>
+    <div class="score-card">
+      <div class="x-score player-active">
+        <div class="icon"></div>
+        <div class="score">0</div>
+      </div>
+      <div class="o-score">
+        <div class="icon"></div>
+        <div class="score">0</div>
+      </div>
+    </div>
   </div>
   <table class="container">
-    <tr class="row rows1">
+    <tr class="row row1">
       <td class="cell cell1"></td>
       <td class="cell cell2"></td>
       <td class="cell cell3"></td>
     </tr>
-    <tr class="row rows2">
+    <tr class="row row2">
       <td class="cell cell1"></td>
       <td class="cell cell2"></td>
       <td class="cell cell3"></td>
     </tr>
-    <tr class="row rows3">
+    <tr class="row rows">
       <td class="cell cell1"></td>
       <td class="cell cell2"></td>
       <td class="cell cell3"></td>
     </tr>
   </table>
-  <div class="results" id="results">
-    <div class="winner">
-      <div class="icon"></div>
-    </div>
-    <button class="reset-button" id="play-again">Play Again</button>
+  <div class="reset-button">
+    Play Again
+  </div>
+  <div class="winner">
+    <div class="icon"></div>
   </div>
   <script src="script.js"></script>
 </body>
+
 </html>
