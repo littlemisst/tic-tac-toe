@@ -4,22 +4,33 @@ var OSVG = "<svg class=\"O\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" h
 var XDIV = document.querySelector(".x-score");
 var ODIV = document.querySelector(".o-score");
 var select = document.querySelector(".select-player");
+var resetBtn = document.querySelector(".reset-button");
 var winner = document.querySelector(".winner");
-var resetBtn = document.querySelector(".play-again");
 var cells = document.querySelectorAll(".cell");
 var GAME_STARTED = false;
 var playerSymbol = "X";
+var X_SCORE = 0;
+var O_SCORE = 0;
+var XDivIcon = XDIV.querySelector(".icon");
+var ODivIcon = ODIV.querySelector(".icon");
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+var XDivScore = XDIV.querySelector(".score");
+var ODivScore = ODIV.querySelector(".score");
 var board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
 ];
+var result = "";
 function startGame() {
     GAME_STARTED = true;
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "all";
     });
     select.style.pointerEvents = "none";
+    XDIV.style.pointerEvents = "none";
+    ODIV.style.pointerEvents = "none";
 }
 function endGame() {
     GAME_STARTED = false;
@@ -27,14 +38,20 @@ function endGame() {
         cell.style.pointerEvents = "none";
     });
     select.style.pointerEvents = "all";
+    XDIV.style.pointerEvents = "all";
+    ODIV.style.pointerEvents = "all";
 }
 function declareWinner(result) {
     if (result != "DRAW") {
-        var svg = result === "X" ? XSVG : OSVG;
+        result == "X" ? X_SCORE++ : O_SCORE++;
+        result == "X"
+            ? (XDivScore.innerHTML = String(X_SCORE))
+            : (ODivScore.innerHTML = String(O_SCORE));
+        var svg = result == "X" ? XSVG : OSVG;
         var str = "<div class=\"icon\">".concat(svg, "</div> is the winner!");
         winner.innerHTML = str;
     }
-    else if (result === "DRAW") {
+    else if (result == "DRAW") {
         winner.innerHTML = "Draw!";
     }
     winner.style.display = "flex";
@@ -50,11 +67,11 @@ function checkWinner() {
     combinations.push(secondCol);
     combinations.push(thirdCol);
     var _loop_1 = function (i) {
-        var isWinning = combinations[i].every(function (element) { return element != "" && element === combinations[i][0]; });
+        var isWinning = combinations[i].every(function (element) { return element != "" && element == combinations[i][0]; });
         if (isWinning) {
-            var winner_1 = combinations[i][0];
+            result = combinations[i][0];
             endGame();
-            declareWinner(winner_1);
+            declareWinner(result);
             return { value: true };
         }
     };
@@ -79,14 +96,22 @@ function makeMove(cell, playerSymbol) {
     svg.style.display = "block";
     setTimeout(function () {
         svg.style.strokeDashoffset = "0";
-    }, 1);
-    var row = ((_a = cell.parentElement) === null || _a === void 0 ? void 0 : _a.classList[1].replace("rows", "")) *
-        1 -
-        1;
-    var column = cell.classList[1].replace("cell", "") * 1 - 1;
+    }, 100);
+    var row = Number((_a = cell.parentElement) === null || _a === void 0 ? void 0 : _a.classList[1].replace("row", "")) * 1 - 1;
+    var column = Number(cell.classList[1].replace("cell", "")) * 1 - 1;
     updateBoard(playerSymbol, row, column);
     checkWinner();
 }
+XDIV.addEventListener("click", function (event) {
+    playerSymbol = "X";
+    XDIV.classList.add("player-active");
+    ODIV.classList.remove("player-active");
+});
+ODIV.addEventListener("click", function (event) {
+    playerSymbol = "O";
+    ODIV.classList.add("player-active");
+    XDIV.classList.remove("player-active");
+});
 cells.forEach(function (cell) {
     cell.innerHTML = XSVG + OSVG;
     cell.addEventListener("click", function click(event) {
@@ -95,15 +120,19 @@ cells.forEach(function (cell) {
             return;
         }
         !GAME_STARTED && startGame();
-        if (select.value === "human") {
+        if (select.value == "human") {
             makeMove(event.target, playerSymbol);
-            playerSymbol = playerSymbol === "X" ? "O" : "X";
+            playerSymbol = playerSymbol == "X" ? "O" : "X";
         }
     });
 });
 resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("click", function (event) {
+    var _a;
     GAME_STARTED = false;
     winner.style.display = "none";
+    playerSymbol = result == "X" ? "O" : "X";
+    result = "";
+    console.log((_a = document.querySelector("player-active")) === null || _a === void 0 ? void 0 : _a.classList[0]);
     board = board.map(function (row) { return row.map(function () { return ""; }); });
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "all";
@@ -112,4 +141,7 @@ resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("c
             s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
         });
     });
+    XDIV.style.pointerEvents = "all";
+    ODIV.style.pointerEvents = "all";
+    select.style.pointerEvents = "all";
 });

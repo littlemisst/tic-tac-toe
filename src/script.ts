@@ -1,16 +1,26 @@
 const XSVG = `<svg class="X" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 0 0 l 24 24"/><path d="M 24 0 l -24 24"/></svg>`;
 const OSVG = `<svg class="O" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M 12 0 a 12 12 0 1 0 0 24 a 12 12 0 1 0 0 -24" /></svg>`;
 
-let XDIV = document.querySelector(".x-score");
-let ODIV = document.querySelector(".o-score");
-
+let XDIV = document.querySelector(".x-score") as HTMLElement;
+let ODIV = document.querySelector(".o-score") as HTMLElement;
 let select = document.querySelector(".select-player") as HTMLInputElement;
+let resetBtn = document.querySelector(".reset-button") as HTMLInputElement;
 let winner = document.querySelector(".winner") as HTMLElement;
-let resetBtn = document.querySelector(".play-again");
 let cells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
 
 let GAME_STARTED = false;
 let playerSymbol = "X";
+let X_SCORE = 0;
+let O_SCORE = 0;
+
+let XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
+let ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
+
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+
+let XDivScore = XDIV.querySelector(".score") as HTMLElement;
+let ODivScore = ODIV.querySelector(".score") as HTMLElement;
 
 let board = [
   ["", "", ""],
@@ -18,29 +28,44 @@ let board = [
   ["", "", ""],
 ];
 
+let result = "";
+
 function startGame() {
   GAME_STARTED = true;
+
   cells.forEach((cell) => {
     cell.style.pointerEvents = "all";
   });
+
   select.style.pointerEvents = "none";
+  XDIV.style.pointerEvents = "none";
+  ODIV.style.pointerEvents = "none";
 }
 
 function endGame() {
   GAME_STARTED = false;
+
   cells.forEach((cell) => {
     cell.style.pointerEvents = "none";
   });
+
   select.style.pointerEvents = "all";
+  XDIV.style.pointerEvents = "all";
+  ODIV.style.pointerEvents = "all";
 }
 
 function declareWinner(result: string) {
   if (result != "DRAW") {
-    let svg = result === "X" ? XSVG : OSVG;
+    result == "X" ? X_SCORE++ : O_SCORE++;
+    result == "X"
+      ? (XDivScore.innerHTML = String(X_SCORE))
+      : (ODivScore.innerHTML = String(O_SCORE));
+
+    let svg = result == "X" ? XSVG : OSVG;
     let str = `<div class="icon">${svg}</div> is the winner!`;
 
     winner.innerHTML = str;
-  } else if (result === "DRAW") {
+  } else if (result == "DRAW") {
     winner.innerHTML = "Draw!";
   }
   winner.style.display = "flex";
@@ -52,6 +77,7 @@ function checkWinner() {
   let firstCol = [board[0][0], board[1][0], board[2][0]];
   let secondCol = [board[0][1], board[1][1], board[2][1]];
   let thirdCol = [board[0][2], board[1][2], board[2][2]];
+
   let combinations = board.concat([leftDiag, rightDiag]);
   combinations.push(firstCol);
   combinations.push(secondCol);
@@ -59,12 +85,12 @@ function checkWinner() {
 
   for (let i = 0; i < combinations.length; i++) {
     let isWinning = combinations[i].every(
-      (element) => element != "" && element === combinations[i][0]
+      (element) => element != "" && element == combinations[i][0]
     );
     if (isWinning) {
-      let winner = combinations[i][0];
+      result = combinations[i][0];
       endGame();
-      declareWinner(winner);
+      declareWinner(result);
       return true;
     }
   }
@@ -85,22 +111,31 @@ function makeMove(cell: HTMLElement, playerSymbol: string) {
   cell.style.pointerEvents = "none";
 
   let svg = cell.querySelector(`.${playerSymbol}`) as HTMLElement;
+
   svg.style.display = "block";
 
   setTimeout(() => {
     svg.style.strokeDashoffset = "0";
-  }, 1);
+  }, 100);
 
-  let row =
-    (cell.parentElement?.classList[1].replace("rows", "") as unknown as number) *
-      1 -
-    1;
-  let column =
-    (cell.classList[1].replace("cell", "") as unknown as number) * 1 - 1;
+  let row = Number(cell.parentElement?.classList[1].replace("row", "")) * 1 - 1;
+  let column = Number(cell.classList[1].replace("cell", "")) * 1 - 1;
 
   updateBoard(playerSymbol, row, column);
   checkWinner();
 }
+
+XDIV.addEventListener("click", (event) => {
+  playerSymbol = "X";
+  XDIV.classList.add("player-active");
+  ODIV.classList.remove("player-active");
+});
+
+ODIV.addEventListener("click", (event) => {
+  playerSymbol = "O";
+  ODIV.classList.add("player-active");
+  XDIV.classList.remove("player-active");
+});
 
 cells.forEach((cell: HTMLElement) => {
   cell.innerHTML = XSVG + OSVG;
@@ -112,17 +147,26 @@ cells.forEach((cell: HTMLElement) => {
 
     !GAME_STARTED && startGame();
 
-    if (select.value === "human") {
+    if (select.value == "human") {
       makeMove(event.target as HTMLElement, playerSymbol);
-      playerSymbol = playerSymbol === "X" ? "O" : "X";
+      playerSymbol = playerSymbol == "X" ? "O" : "X";
     }
   });
 });
 
 resetBtn?.addEventListener("click", (event) => {
   GAME_STARTED = false;
+
   winner.style.display = "none";
+
+  playerSymbol = result == "X" ? "O" : "X"
+
+  result = ""
+
+  console.log(document.querySelector("player-active")?.classList[0]);
+
   board = board.map((row) => row.map(() => ""));
+
   cells.forEach((cell) => {
     cell.style.pointerEvents = "all";
     cell.querySelectorAll("svg").forEach((s) => {
@@ -130,4 +174,8 @@ resetBtn?.addEventListener("click", (event) => {
       s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
     });
   });
+
+  XDIV.style.pointerEvents = "all";
+  ODIV.style.pointerEvents = "all";
+  select.style.pointerEvents = "all";
 });
