@@ -32,6 +32,7 @@ body {
   height: var(--size);
   padding: calc(var(--size) * 0.175);
   border: 3px solid var(--borderColor);
+  cursor: pointer;
 }
 
 .row *:nth-child(2n+1) {
@@ -116,7 +117,7 @@ body {
   transition: none;
 }
 
-.score-card > div {
+.score-card>div {
   display: flex;
   flex-direction: row;
   border: 2px solid var(--borderColor);
@@ -125,7 +126,7 @@ body {
   cursor: pointer;
 }
 
-.score-card > .player-active {
+.score-card>.player-active {
   border-bottom-width: 2px;
 }
 
@@ -139,11 +140,34 @@ body {
   font-weight: 600;
 }
 
-.reset-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: var(--fontSize);
+.winner-X {
+  color: var(--Xcolor);
+  font-size: 4rem;
+}
+
+.winner-O {
+  color: var(--Ocolor);
+  font-size: 4rem;
+}
+
+.winning-message {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(255, 248, 220, 0.9);
+  justify-content: center;
+  align-items: center;
+  color: var(--playerFontColor);
+  font-size: 4rem;
+  font-family: sans-serif;
+  flex-direction: column;
+}
+
+.winning-message button {
+  font-size: 1.25rem;
   background-color: var(--playerFontColor);
   color: #ffff;
   font-family: sans-serif;
@@ -154,17 +178,29 @@ body {
   cursor: pointer
 }
 
-.winner {
-  display: none;
-  position: absolute;
-  bottom: 3rem;
+.winning-message button:hover {
+  background-color: #ffff;
   color: var(--playerFontColor);
-  font-size: 2.5rem;
-  gap: 0.5rem
+  border: 2px solid var(--playerFontColor);
 }
 
-.winner .icon {
-  border: none;
-  width: 2.5rem;
-  height: 2.5rem
+.winning-message.show {
+  display: flex;
+}
+
+.winning-message-text{
+  margin-bottom: 2rem;
+}
+
+
+.winning-message-text.X{
+  color: var(--Xcolor);
+  font-size: 4rem;
+  display: flex;
+}
+
+.winning-message-text.O{
+  color: var(--Ocolor);
+  font-size: 4rem;
+  display: flex;
 }

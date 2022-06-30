@@ -4,8 +4,11 @@ var OSVG = "<svg class=\"O\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" h
 var XDIV = document.querySelector(".x-score");
 var ODIV = document.querySelector(".o-score");
 var select = document.querySelector(".select-player");
-var resetBtn = document.querySelector(".reset-button");
-var winner = document.querySelector(".winner");
+var winningMessageElement = document.getElementById("winningMessage");
+var winningMessageText = document.querySelector("[data-winning-message-text]");
+var winnerMessage = document.querySelector(".winning-message");
+var winnerMessageText = document.querySelector(".winning-message-text");
+var resetBtn = document.getElementById("resetButton");
 var cells = document.querySelectorAll(".cell");
 var GAME_STARTED = false;
 var playerSymbol = "X";
@@ -43,18 +46,19 @@ function endGame() {
 }
 function declareWinner(result) {
     if (result != "DRAW") {
-        result == "X" ? X_SCORE++ : O_SCORE++;
-        result == "X"
+        result === "X" ? X_SCORE++ : O_SCORE++;
+        result === "X"
             ? (XDivScore.innerHTML = String(X_SCORE))
             : (ODivScore.innerHTML = String(O_SCORE));
-        var svg = result == "X" ? XSVG : OSVG;
-        var str = "<div class=\"icon\">".concat(svg, "</div> is the winner!");
-        winner.innerHTML = str;
+        result === "X"
+            ? winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("X")
+            : winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("O");
+        winnerMessageText.innerText = "".concat(result, " is the winner!");
     }
-    else if (result == "DRAW") {
-        winner.innerHTML = "Draw!";
+    else if (result === "DRAW") {
+        winnerMessageText.innerText = "Draw!";
     }
-    winner.style.display = "flex";
+    winningMessageElement === null || winningMessageElement === void 0 ? void 0 : winningMessageElement.classList.add("show");
 }
 function checkWinner() {
     var leftDiag = [board[0][0], board[1][1], board[2][2]];
@@ -67,7 +71,7 @@ function checkWinner() {
     combinations.push(secondCol);
     combinations.push(thirdCol);
     var _loop_1 = function (i) {
-        var isWinning = combinations[i].every(function (element) { return element != "" && element == combinations[i][0]; });
+        var isWinning = combinations[i].every(function (element) { return element != "" && element === combinations[i][0]; });
         if (isWinning) {
             result = combinations[i][0];
             endGame();
@@ -120,17 +124,17 @@ cells.forEach(function (cell) {
             return;
         }
         !GAME_STARTED && startGame();
-        if (select.value == "human") {
+        if (select.value === "human") {
             makeMove(event.target, playerSymbol);
-            playerSymbol = playerSymbol == "X" ? "O" : "X";
+            playerSymbol = playerSymbol === "X" ? "O" : "X";
         }
     });
 });
 resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("click", function (event) {
     var _a;
     GAME_STARTED = false;
-    winner.style.display = "none";
-    playerSymbol = result == "X" ? "O" : "X";
+    winningMessageElement.classList.remove("show");
+    playerSymbol = result === "X" ? "O" : "X";
     result = "";
     console.log((_a = document.querySelector("player-active")) === null || _a === void 0 ? void 0 : _a.classList[0]);
     board = board.map(function (row) { return row.map(function () { return ""; }); });

@@ -1,26 +1,35 @@
 const XSVG = `<svg class="X" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M 0 0 l 24 24"/><path d="M 24 0 l -24 24"/></svg>`;
 const OSVG = `<svg class="O" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M 12 0 a 12 12 0 1 0 0 24 a 12 12 0 1 0 0 -24" /></svg>`;
 
-let XDIV = document.querySelector(".x-score") as HTMLElement;
-let ODIV = document.querySelector(".o-score") as HTMLElement;
-let select = document.querySelector(".select-player") as HTMLInputElement;
-let resetBtn = document.querySelector(".reset-button") as HTMLInputElement;
-let winner = document.querySelector(".winner") as HTMLElement;
-let cells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
+const XDIV = document.querySelector(".x-score") as HTMLElement;
+const ODIV = document.querySelector(".o-score") as HTMLElement;
+const select = document.querySelector(".select-player") as HTMLInputElement;
+const winningMessageElement = document.getElementById(
+  "winningMessage"
+) as HTMLElement;
+const winningMessageText = document.querySelector(
+  "[data-winning-message-text]"
+) as HTMLElement;
+const winnerMessage = document.querySelector(".winning-message") as HTMLElement;
+const winnerMessageText = document.querySelector(
+  ".winning-message-text"
+) as HTMLElement;
+const resetBtn = document.getElementById("resetButton") as HTMLInputElement;
+const cells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
 
 let GAME_STARTED = false;
 let playerSymbol = "X";
 let X_SCORE = 0;
 let O_SCORE = 0;
 
-let XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
-let ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
+const XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
+const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
 
 XDivIcon.innerHTML = XSVG;
 ODivIcon.innerHTML = OSVG;
 
-let XDivScore = XDIV.querySelector(".score") as HTMLElement;
-let ODivScore = ODIV.querySelector(".score") as HTMLElement;
+const XDivScore = XDIV.querySelector(".score") as HTMLElement;
+const ODivScore = ODIV.querySelector(".score") as HTMLElement;
 
 let board = [
   ["", "", ""],
@@ -56,19 +65,20 @@ function endGame() {
 
 function declareWinner(result: string) {
   if (result != "DRAW") {
-    result == "X" ? X_SCORE++ : O_SCORE++;
-    result == "X"
+    result === "X" ? X_SCORE++ : O_SCORE++;
+    result === "X"
       ? (XDivScore.innerHTML = String(X_SCORE))
       : (ODivScore.innerHTML = String(O_SCORE));
 
-    let svg = result == "X" ? XSVG : OSVG;
-    let str = `<div class="icon">${svg}</div> is the winner!`;
-
-    winner.innerHTML = str;
-  } else if (result == "DRAW") {
-    winner.innerHTML = "Draw!";
+    result === "X"
+      ? winnerMessageText?.classList.add("X")
+      : winnerMessageText?.classList.add("O");
+    winnerMessageText.innerText = `${result} is the winner!`;
+  } else if (result === "DRAW") {
+    winnerMessageText.innerText = "Draw!";
   }
-  winner.style.display = "flex";
+
+  winningMessageElement?.classList.add("show");
 }
 
 function checkWinner() {
@@ -85,7 +95,7 @@ function checkWinner() {
 
   for (let i = 0; i < combinations.length; i++) {
     let isWinning = combinations[i].every(
-      (element) => element != "" && element == combinations[i][0]
+      (element) => element != "" && element === combinations[i][0]
     );
     if (isWinning) {
       result = combinations[i][0];
@@ -147,9 +157,9 @@ cells.forEach((cell: HTMLElement) => {
 
     !GAME_STARTED && startGame();
 
-    if (select.value == "human") {
+    if (select.value === "human") {
       makeMove(event.target as HTMLElement, playerSymbol);
-      playerSymbol = playerSymbol == "X" ? "O" : "X";
+      playerSymbol = playerSymbol === "X" ? "O" : "X";
     }
   });
 });
@@ -157,11 +167,11 @@ cells.forEach((cell: HTMLElement) => {
 resetBtn?.addEventListener("click", (event) => {
   GAME_STARTED = false;
 
-  winner.style.display = "none";
+  winningMessageElement.classList.remove("show");
 
-  playerSymbol = result == "X" ? "O" : "X"
+  playerSymbol = result === "X" ? "O" : "X";
 
-  result = ""
+  result = "";
 
   console.log(document.querySelector("player-active")?.classList[0]);
 
