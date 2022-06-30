@@ -3,33 +3,46 @@ const OSVG = `<svg class="O" xmlns="http://www.w3.org/2000/svg" width="24" heigh
 
 const XDIV = document.querySelector(".x-score") as HTMLElement;
 const ODIV = document.querySelector(".o-score") as HTMLElement;
+
 const select = document.querySelector(".select-player") as HTMLInputElement;
+const selectPlayerElement = document.getElementById(
+  "playerSelection"
+) as HTMLElement;
+const selectFriend = document.getElementById("friend") as HTMLInputElement;
+const selectComputer = document.getElementById("computer") as HTMLInputElement;
+
+const instructionsElement = document.getElementById(
+  "instructions"
+) as HTMLElement;
+const readyElement = document.getElementById("ready") as HTMLInputElement
+
 const winningMessageElement = document.getElementById(
   "winningMessage"
 ) as HTMLElement;
-const winningMessageText = document.querySelector(
-  "[data-winning-message-text]"
-) as HTMLElement;
-const winnerMessage = document.querySelector(".winning-message") as HTMLElement;
 const winnerMessageText = document.querySelector(
   ".winning-message-text"
 ) as HTMLElement;
 const resetBtn = document.getElementById("resetButton") as HTMLInputElement;
+
 const cells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
+
+const XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
+const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
+
+const XDivScore = XDIV.querySelector(".score") as HTMLElement;
+const ODivScore = ODIV.querySelector(".score") as HTMLElement;
+
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+
+XDIV.style.pointerEvents = "none";
+ODIV.style.pointerEvents = "none";
 
 let GAME_STARTED = false;
 let playerSymbol = "X";
 let X_SCORE = 0;
 let O_SCORE = 0;
-
-const XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
-const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
-
-XDivIcon.innerHTML = XSVG;
-ODivIcon.innerHTML = OSVG;
-
-const XDivScore = XDIV.querySelector(".score") as HTMLElement;
-const ODivScore = ODIV.querySelector(".score") as HTMLElement;
+let opponent = ""
 
 let board = [
   ["", "", ""],
@@ -39,16 +52,22 @@ let board = [
 
 let result = "";
 
+selectFriend?.addEventListener("click", (event) => {
+  opponent = "human"
+  selectPlayerElement.classList.add("hide");
+  instructionsElement.classList.add("show");
+});
+
+readyElement?.addEventListener("click", (event) => {
+  instructionsElement.classList.remove("show")
+})
+
 function startGame() {
   GAME_STARTED = true;
 
   cells.forEach((cell) => {
     cell.style.pointerEvents = "all";
   });
-
-  select.style.pointerEvents = "none";
-  XDIV.style.pointerEvents = "none";
-  ODIV.style.pointerEvents = "none";
 }
 
 function endGame() {
@@ -57,10 +76,6 @@ function endGame() {
   cells.forEach((cell) => {
     cell.style.pointerEvents = "none";
   });
-
-  select.style.pointerEvents = "all";
-  XDIV.style.pointerEvents = "all";
-  ODIV.style.pointerEvents = "all";
 }
 
 function declareWinner(result: string) {
@@ -135,32 +150,18 @@ function makeMove(cell: HTMLElement, playerSymbol: string) {
   checkWinner();
 }
 
-XDIV.addEventListener("click", (event) => {
-  playerSymbol = "X";
-  XDIV.classList.add("player-active");
-  ODIV.classList.remove("player-active");
-});
-
-ODIV.addEventListener("click", (event) => {
-  playerSymbol = "O";
-  ODIV.classList.add("player-active");
-  XDIV.classList.remove("player-active");
-});
 
 cells.forEach((cell: HTMLElement) => {
   cell.innerHTML = XSVG + OSVG;
   cell.addEventListener("click", function click(event) {
-    if (!select.value) {
-      alert("Choose an opponent");
-      return;
-    }
 
     !GAME_STARTED && startGame();
 
-    if (select.value === "human") {
+    if (opponent === "human") {
       makeMove(event.target as HTMLElement, playerSymbol);
       playerSymbol = playerSymbol === "X" ? "O" : "X";
     }
+    // add here for computer
   });
 });
 
@@ -184,8 +185,4 @@ resetBtn?.addEventListener("click", (event) => {
       s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
     });
   });
-
-  XDIV.style.pointerEvents = "all";
-  ODIV.style.pointerEvents = "all";
-  select.style.pointerEvents = "all";
 });

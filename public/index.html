@@ -12,11 +12,11 @@
 
 <body>
   <div class="top-left">
-    <select class="select-player">
+    <!-- <select class="select-player">
       <option value="" selected hidden disabled>Select Oponent</option>
       <option class="player-option" value="computer">Computer</option>
       <option class="player-option" value="human">Friend</option>
-    </select>
+    </select> -->
     <div class="score-card">
       <div class="x-score player-active">
         <div class="icon"></div>
@@ -45,9 +45,27 @@
       <td class="cell cell3"></td>
     </tr>
   </table>
+
+  <div class="player-selection" id="playerSelection">
+    <div class="select-player-text">Select Your Opponent</div>
+    <button id="friend">
+      Friend
+    </button>
+    <button id="computer">
+      Computer
+    </button>
+  </div>
+
+  <div class="instructions" id="instructions">
+    <div class="instructions-text">The first one who will score 3 points will be the winner. The loser should do a randomly generated dare. Goodluck!</div>
+    <button id="ready">
+      Ready!
+    </button>
+    
+  </div>
   <div class="winning-message" id="winningMessage">
     <div class="winning-message-text"></div>
-    <button class="reset-button" id="resetButton">
+    <button id="resetButton">
       Play Again
     </button>
   </div>

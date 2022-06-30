@@ -4,45 +4,53 @@ var OSVG = "<svg class=\"O\" xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" h
 var XDIV = document.querySelector(".x-score");
 var ODIV = document.querySelector(".o-score");
 var select = document.querySelector(".select-player");
+var selectPlayerElement = document.getElementById("playerSelection");
+var selectFriend = document.getElementById("friend");
+var selectComputer = document.getElementById("computer");
+var instructionsElement = document.getElementById("instructions");
+var readyElement = document.getElementById("ready");
 var winningMessageElement = document.getElementById("winningMessage");
-var winningMessageText = document.querySelector("[data-winning-message-text]");
-var winnerMessage = document.querySelector(".winning-message");
 var winnerMessageText = document.querySelector(".winning-message-text");
 var resetBtn = document.getElementById("resetButton");
 var cells = document.querySelectorAll(".cell");
+var XDivIcon = XDIV.querySelector(".icon");
+var ODivIcon = ODIV.querySelector(".icon");
+var XDivScore = XDIV.querySelector(".score");
+var ODivScore = ODIV.querySelector(".score");
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+XDIV.style.pointerEvents = "none";
+ODIV.style.pointerEvents = "none";
 var GAME_STARTED = false;
 var playerSymbol = "X";
 var X_SCORE = 0;
 var O_SCORE = 0;
-var XDivIcon = XDIV.querySelector(".icon");
-var ODivIcon = ODIV.querySelector(".icon");
-XDivIcon.innerHTML = XSVG;
-ODivIcon.innerHTML = OSVG;
-var XDivScore = XDIV.querySelector(".score");
-var ODivScore = ODIV.querySelector(".score");
+var opponent = "";
 var board = [
     ["", "", ""],
     ["", "", ""],
     ["", "", ""],
 ];
 var result = "";
+selectFriend === null || selectFriend === void 0 ? void 0 : selectFriend.addEventListener("click", function (event) {
+    opponent = "human";
+    selectPlayerElement.classList.add("hide");
+    instructionsElement.classList.add("show");
+});
+readyElement === null || readyElement === void 0 ? void 0 : readyElement.addEventListener("click", function (event) {
+    instructionsElement.classList.remove("show");
+});
 function startGame() {
     GAME_STARTED = true;
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "all";
     });
-    select.style.pointerEvents = "none";
-    XDIV.style.pointerEvents = "none";
-    ODIV.style.pointerEvents = "none";
 }
 function endGame() {
     GAME_STARTED = false;
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "none";
     });
-    select.style.pointerEvents = "all";
-    XDIV.style.pointerEvents = "all";
-    ODIV.style.pointerEvents = "all";
 }
 function declareWinner(result) {
     if (result != "DRAW") {
@@ -106,28 +114,15 @@ function makeMove(cell, playerSymbol) {
     updateBoard(playerSymbol, row, column);
     checkWinner();
 }
-XDIV.addEventListener("click", function (event) {
-    playerSymbol = "X";
-    XDIV.classList.add("player-active");
-    ODIV.classList.remove("player-active");
-});
-ODIV.addEventListener("click", function (event) {
-    playerSymbol = "O";
-    ODIV.classList.add("player-active");
-    XDIV.classList.remove("player-active");
-});
 cells.forEach(function (cell) {
     cell.innerHTML = XSVG + OSVG;
     cell.addEventListener("click", function click(event) {
-        if (!select.value) {
-            alert("Choose an opponent");
-            return;
-        }
         !GAME_STARTED && startGame();
-        if (select.value === "human") {
+        if (opponent === "human") {
             makeMove(event.target, playerSymbol);
             playerSymbol = playerSymbol === "X" ? "O" : "X";
         }
+        // add here for computer
     });
 });
 resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("click", function (event) {
@@ -145,7 +140,4 @@ resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("c
             s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
         });
     });
-    XDIV.style.pointerEvents = "all";
-    ODIV.style.pointerEvents = "all";
-    select.style.pointerEvents = "all";
 });
