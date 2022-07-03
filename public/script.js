@@ -60,6 +60,7 @@ var XDivIcon = XDIV.querySelector(".icon");
 var ODivIcon = ODIV.querySelector(".icon");
 var XDivScore = XDIV.querySelector(".score");
 var ODivScore = ODIV.querySelector(".score");
+var loading = document.getElementById("loading");
 function getRandomDare() {
     return __awaiter(this, void 0, void 0, function () {
         var response, data;
@@ -105,10 +106,14 @@ readyElement === null || readyElement === void 0 ? void 0 : readyElement.addEven
     }, 2000);
 });
 dareButton.addEventListener("click", function (event) {
+    dareButton.classList.add("hide");
+    dareMessageText.classList.add("hide");
+    loading.classList.add("show");
     getRandomDare().then(function (dareText) {
+        dareMessageText.classList.remove("hide");
         dareMessageText.innerText = dareText;
-        dareButton.classList.add("hide");
         endGameDareButton.classList.add("show");
+        loading.classList.remove("show");
     });
 });
 endGameDareButton.addEventListener("click", function (event) {

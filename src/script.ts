@@ -50,6 +50,8 @@ const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
 const XDivScore = XDIV.querySelector(".score") as HTMLElement;
 const ODivScore = ODIV.querySelector(".score") as HTMLElement;
 
+const loading = document.getElementById("loading") as HTMLElement;
+
 async function getRandomDare() {
   const response = await fetch("https://api.truthordarebot.xyz/api/dare");
   const data = await response.json();
@@ -95,10 +97,15 @@ readyElement?.addEventListener("click", (event) => {
 });
 
 dareButton.addEventListener("click", (event) => {
+  dareButton.classList.add("hide");
+  dareMessageText.classList.add("hide")
+  loading.classList.add("show")
+
   getRandomDare().then((dareText) => {
+    dareMessageText.classList.remove("hide")
     dareMessageText.innerText = dareText as string;
-    dareButton.classList.add("hide");
     endGameDareButton.classList.add("show");
+    loading.classList.remove("show")
   });
 });
 

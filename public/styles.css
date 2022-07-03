@@ -439,6 +439,12 @@ body {
 
 .dare-message-text {
   margin-bottom: 2rem;
+  display: flex;
+}
+
+.dare-message-text.hide {
+  margin-bottom: 2rem;
+  display: none;
 }
 
 
@@ -638,6 +644,34 @@ body {
     opacity: 1;
   }
 }
+
+
+.loader {
+  display: none;
+  border: 1rem solid  var(--borderColor);
+  border-radius: 50%;
+  border-top: 1rem solid var(--playerFontColor);
+  border-bottom: 1rem solid var(--playerFontColor);
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.loader.show{
+  display: flex;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 
 @media only screen and (max-width: 600px) {
   #text-drop {
