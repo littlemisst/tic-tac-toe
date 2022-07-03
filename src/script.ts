@@ -4,6 +4,9 @@ const OSVG = `<svg class="O" xmlns="http://www.w3.org/2000/svg" width="24" heigh
 const XDIV = document.querySelector(".x-score") as HTMLElement;
 const ODIV = document.querySelector(".o-score") as HTMLElement;
 
+let playerTurn = document.querySelector(".player-turn") as HTMLInputElement;
+const playerTurnElement = document.getElementById("playerTurn") as HTMLElement;
+
 const select = document.querySelector(".select-player") as HTMLInputElement;
 const selectPlayerElement = document.getElementById(
   "playerSelection"
@@ -14,7 +17,7 @@ const selectComputer = document.getElementById("computer") as HTMLInputElement;
 const instructionsElement = document.getElementById(
   "instructions"
 ) as HTMLElement;
-const readyElement = document.getElementById("ready") as HTMLInputElement
+const readyElement = document.getElementById("ready") as HTMLInputElement;
 
 const winningMessageElement = document.getElementById(
   "winningMessage"
@@ -24,6 +27,19 @@ const winnerMessageText = document.querySelector(
 ) as HTMLElement;
 const resetBtn = document.getElementById("resetButton") as HTMLInputElement;
 
+const dareMessageElement = document.getElementById(
+  "dareMessage"
+) as HTMLElement;
+const dareMessageText = document.querySelector(
+  ".dare-message-text"
+) as HTMLElement;
+const dareButton = document.getElementById("generateDare") as HTMLInputElement;
+const endGameDareButton = document.getElementById(
+  "endGameDare"
+) as HTMLInputElement;
+
+const endGameButton = document.getElementById("endGame") as HTMLInputElement;
+
 const cells = document.querySelectorAll(".cell") as NodeListOf<HTMLElement>;
 
 const XDivIcon = XDIV.querySelector(".icon") as HTMLElement;
@@ -32,17 +48,11 @@ const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
 const XDivScore = XDIV.querySelector(".score") as HTMLElement;
 const ODivScore = ODIV.querySelector(".score") as HTMLElement;
 
-XDivIcon.innerHTML = XSVG;
-ODivIcon.innerHTML = OSVG;
-
-XDIV.style.pointerEvents = "none";
-ODIV.style.pointerEvents = "none";
-
 let GAME_STARTED = false;
 let playerSymbol = "X";
 let X_SCORE = 0;
 let O_SCORE = 0;
-let opponent = ""
+let opponent = "";
 
 let board = [
   ["", "", ""],
@@ -52,15 +62,103 @@ let board = [
 
 let result = "";
 
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+
+XDIV.style.pointerEvents = "none";
+ODIV.style.pointerEvents = "none";
+
 selectFriend?.addEventListener("click", (event) => {
-  opponent = "human"
+  opponent = "human";
   selectPlayerElement.classList.add("hide");
   instructionsElement.classList.add("show");
 });
 
 readyElement?.addEventListener("click", (event) => {
-  instructionsElement.classList.remove("show")
-})
+  instructionsElement.classList.remove("show");
+
+  playerTurn.innerText = `Player ${playerSymbol} goes first`;
+
+  setTimeout(() => {
+    playerTurnElement.classList.add("hide");
+  }, 2000);
+});
+
+async function getRandomDare() {
+  const response = await fetch("https://api.truthordarebot.xyz/api/dare");
+  const data = await response.json();
+  return data.question;
+}
+
+dareButton.addEventListener("click", (event) => {
+  getRandomDare().then((dareText) => {
+    dareMessageText.innerText = dareText as string;
+    dareButton.classList.add("hide");
+    endGameDareButton.classList.add("show");
+  });
+});
+
+endGameDareButton.addEventListener("click", (event) => {
+  console.log("end game na woooh");
+
+  GAME_STARTED = false;
+
+  playerSymbol = "X";
+
+  result = "";
+
+  board = board.map((row) => row.map(() => ""));
+
+  cells.forEach((cell) => {
+    cell.style.pointerEvents = "all";
+    cell.querySelectorAll("svg").forEach((s) => {
+      s.style.display = "none";
+      s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
+    });
+  });
+
+  X_SCORE = 0;
+  O_SCORE = 0;
+
+  XDivScore.innerHTML = String(X_SCORE)
+  ODivScore.innerHTML = String(O_SCORE);
+
+  selectPlayerElement.classList.remove("hide");
+  dareMessageElement.classList.remove("show");
+  winningMessageElement.classList.remove("show");
+  console.log(selectPlayerElement.classList.remove("hide"));
+});
+
+endGameButton.addEventListener("click", (event) => {
+  console.log("end game na woooh");
+  // selectPlayerElement.classList.remove("hide")
+  GAME_STARTED = false;
+
+  playerSymbol = "X";
+
+  result = "";
+
+  board = board.map((row) => row.map(() => ""));
+
+  cells.forEach((cell) => {
+    cell.style.pointerEvents = "all";
+    cell.querySelectorAll("svg").forEach((s) => {
+      s.style.display = "none";
+      s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
+    });
+  });
+
+  X_SCORE = 0;
+  O_SCORE = 0;
+
+  XDivScore.innerHTML = String(X_SCORE)
+  ODivScore.innerHTML = String(O_SCORE);
+
+  selectPlayerElement.classList.remove("hide");
+  dareMessageElement.classList.remove("show");
+  winningMessageElement.classList.remove("show");
+  console.log(selectPlayerElement.classList.remove("hide"));
+});
 
 function startGame() {
   GAME_STARTED = true;
@@ -94,6 +192,13 @@ function declareWinner(result: string) {
   }
 
   winningMessageElement?.classList.add("show");
+
+  if (X_SCORE === 3 || O_SCORE === 3) {
+    dareMessageElement?.classList.add("show");
+    dareMessageText.innerText = `Player ${X_SCORE === 3 ? "X" : "O"} wins! ${
+      X_SCORE === 3 ? "O" : "X"
+    } should do the dare.`;
+  }
 }
 
 function checkWinner() {
@@ -150,11 +255,9 @@ function makeMove(cell: HTMLElement, playerSymbol: string) {
   checkWinner();
 }
 
-
 cells.forEach((cell: HTMLElement) => {
   cell.innerHTML = XSVG + OSVG;
   cell.addEventListener("click", function click(event) {
-
     !GAME_STARTED && startGame();
 
     if (opponent === "human") {
@@ -174,8 +277,6 @@ resetBtn?.addEventListener("click", (event) => {
 
   result = "";
 
-  console.log(document.querySelector("player-active")?.classList[0]);
-
   board = board.map((row) => row.map(() => ""));
 
   cells.forEach((cell) => {
@@ -185,4 +286,11 @@ resetBtn?.addEventListener("click", (event) => {
       s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
     });
   });
+
+  playerTurn.innerText = `Player ${playerSymbol} goes first`;
+
+  playerTurnElement.classList.remove("hide");
+  setTimeout(() => {
+    playerTurnElement.classList.add("hide");
+  }, 2000);
 });
