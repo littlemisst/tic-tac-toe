@@ -1,7 +1,8 @@
 :root {
   --bgColor: #FFF8DC;
   --borderColor: #E1C16E;
-  --size: 8rem;
+  --dsktpSize: 8rem;
+  --mobileSize: 4.5rem;
   --Xcolor: #DAA520;
   --Ocolor: #8B8000;
   --playerFontColor: #804000;
@@ -15,30 +16,30 @@
 
 body {
   background-color: var(--bgColor);
-  width: 100vw;
-  height: 100vh;
   display: flex;
+  height: 100vh;
   justify-content: center;
   position: relative;
+  width: 100vw;
 }
 
 .container {
-  border-spacing: 0;
   align-self: center;
+  border-spacing: 0;
 }
 
 .cell {
-  min-width: var(--size);
-  height: var(--size);
-  padding: calc(var(--size) * 0.175);
   border: 3px solid var(--borderColor);
   cursor: pointer;
+  height: var(--dsktpSize);
+  min-width: var(--dsktpSize);
+  padding: calc(var(--dsktpSize) * 0.175);
 }
 
 .row *:nth-child(2n+1) {
   border-left: none;
-  border-top: none;
   border-right: none;
+  border-top: none;
 }
 
 .row .cell:nth-child(2) {
@@ -50,10 +51,10 @@ body {
 }
 
 .cell svg {
-  width: var(--size);
-  height: var(--size);
-  stroke-width: 3px;
+  height: var(--dsktpSize);
   overflow: visible;
+  stroke-width: 3px;
+  width: var(--dsktpSize);
 }
 
 .X {
@@ -61,7 +62,7 @@ body {
   stroke: var(--Xcolor);
   stroke-dasharray: 36 36;
   stroke-dashoffset: 36;
-  transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: stroke-dashoffset 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .O {
@@ -69,62 +70,62 @@ body {
   stroke: var(--Ocolor);
   stroke-dasharray: 76 76;
   stroke-dashoffset: 76;
-  transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: stroke-dashoffset 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 
 .select-player {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  padding: 0.3rem;
   background-color: var(--borderColor);
   border: 2px solid var(--bgColor);
   border-radius: 5px;
   color: var(--playerFontColor);
+  display: block;
   font-size: var(--fontSize);
   font-weight: 600;
-  display: block;
+  left: 1rem;
+  padding: 0.3rem;
+  position: absolute;
+  top: 1rem;
 }
 
 .player-option {
-  background-color: #ffff;
+  background-color: #FFF;
 }
 
 .score-card {
   display: flex;
   flex-direction: row;
   gap: 0.75rem;
+  left: 1rem;
   position: absolute;
   top: 1rem;
-  left: 1rem;
 }
 
 .icon {
-  width: 1.5rem;
+  border-right: 2px solid var(--borderColor);
   height: 1.25rem;
   padding: 5px;
-  border-right: 2px solid var(--borderColor);
+  width: 1.5rem;
 }
 
 .icon svg {
-  width: 90%;
-  height: 90%;
-  stroke-width: 3px;
-  overflow: visible;
   display: block;
+  height: 90%;
+  overflow: visible;
   stroke-dasharray: none;
   stroke-dashoffset: none;
+  stroke-width: 3px;
   transition: none;
+  width: 90%;
 }
 
 .score-card>div {
-  display: flex;
-  flex-direction: row;
   border: 2px solid var(--borderColor);
   border-radius: 5px;
-  height: 1.75rem;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  height: 1.75rem;
 }
 
 .score-card>.player-active {
@@ -132,13 +133,13 @@ body {
 }
 
 .score {
-  display: flex;
-  width: 2rem;
-  justify-content: center;
   align-items: center;
   color: var(--playerFontColor);
+  display: flex;
   font-size: var(--fontSize);
   font-weight: 600;
+  justify-content: center;
+  width: 2rem;
 }
 
 .winner-X {
@@ -152,41 +153,41 @@ body {
 }
 
 .player-selection {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(255, 248, 220);
-  justify-content: center;
   align-items: center;
+  background-color: rgb(255, 248, 220);
+  bottom: 0;
   color: var(--playerFontColor);
-  font-size: 2rem;
-  text-align: center;
-  font-weight: 600;
-  font-family: sans-serif;
+  display: flex;
   flex-direction: column;
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
 }
 
 .player-selection button {
-  width: 30%;
-  margin: 10px;
-  font-size: 1.25rem;
   background-color: var(--borderColor);
-  color: var(--playerFontColor);
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--borderColor);
-  border-radius: 5px;
+  border-radius: 0.75rem;
+  color: var(--playerFontColor);
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 1.25rem;
   font-weight: 600;
-  cursor: pointer
+  margin: 10px;
+  padding: 6px;
+  width: 20rem;
 }
 
 .player-selection button:hover {
   background-color: var(--playerFontColor);
-  color: #ffff;
   border: 2px solid var(--playerFontColor);
+  color: #FFF;
 }
 
 .player-selection.hide {
@@ -194,50 +195,86 @@ body {
 }
 
 .select-player-text {
-  margin-bottom: 2rem;
+  animation: fadeIn 2s infinite;
+  -webkit-animation: fadeIn 2s infinite;
+  -moz-animation: fadeIn 2s infinite;
+  -o-animation: fadeIn 2s infinite;
+  -ms-animation: fadeIn 2s infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@-moz-keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@-webkit-keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@-o-keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@-ms-keyframes fadeIn {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .instructions {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(255, 248, 220, 0.9);
-  justify-content: center;
   align-items: center;
+  background-color: var(--bgColor);
+  bottom: 0;
   color: var(--playerFontColor);
-  font-size: 1.25rem;
-  text-align: center;
-  font-weight: 600;
-  font-family: sans-serif;
+  display: none;
   flex-direction: column;
+  font-family: sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  justify-content: center;
+  left: 0;
   padding: 3rem;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
 }
 
 .instructions button {
-  width: 30%;
-  margin: 10px;
-  font-size: 1.25rem;
   background-color: var(--borderColor);
-  color: var(--playerFontColor);
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--borderColor);
-  border-radius: 5px;
+  border-radius: 0.75rem;
+  color: var(--playerFontColor);
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 1.25rem;
   font-weight: 600;
-  cursor: pointer
+  margin: 10px;
+  padding: 6px;
+  width: 20rem;
 }
 
 .instructions button:hover {
   background-color: var(--playerFontColor);
-  color: #ffff;
   border: 2px solid var(--playerFontColor);
+  color: #FFF;
 }
 
 .instructions-text {
   margin-bottom: 2rem;
+  width: 40%;
 }
 
 .instructions.show {
@@ -245,37 +282,39 @@ body {
 }
 
 .winning-message {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(255, 248, 220, 0.9);
-  justify-content: center;
   align-items: center;
+  background-color: rgb(255, 248, 220, 0.9);
+  bottom: 0;
   color: var(--playerFontColor);
-  font-size: 4rem;
-  font-family: sans-serif;
+  display: none;
   flex-direction: column;
+  font-family: sans-serif;
+  font-size: 4rem;
+  font-weight: 600;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
 }
 
 .winning-message button {
-  font-size: 1.25rem;
   background-color: var(--playerFontColor);
-  color: #ffff;
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--playerFontColor);
   border-radius: 5px;
+  color: #FFF;
+  cursor: pointer;
+  font-family: sans-serif;
+  font-size: 1.25rem;
   font-weight: 600;
-  cursor: pointer
+  padding: 6px;
 }
 
 .winning-message button:hover {
-  background-color: #ffff;
-  color: var(--playerFontColor);
+  background-color: #FFF;
   border: 2px solid var(--playerFontColor);
+  color: var(--playerFontColor);
 }
 
 .winning-message.show {
@@ -286,7 +325,6 @@ body {
   margin-bottom: 2rem;
 }
 
-
 .winning-message-text.X {
   color: var(--Xcolor);
   font-size: 4rem;
@@ -295,35 +333,42 @@ body {
 
 .winning-message-text.O {
   color: var(--Ocolor);
-  font-size: 4rem;
   display: flex;
+  font-size: 4rem;
 }
 
 .end-game {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 0.85rem;
-  font-size: var(--fontSize);
   background-color: var(--playerFontColor);
-  color: #ffff;
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--playerFontColor);
   border-radius: 5px;
+  color: #FFF;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-size: var(--fontSize);
+  font-family: sans-serif;
   font-weight: 600;
-  cursor: pointer
+  padding: 6px;
+  position: absolute;
+  right: 0.75rem;
+  top: 1rem;
 }
 
 .player-turn {
   display: flex;
-  position: absolute;
-  top: 8rem;
-  color: var(--playerFontColor);
-  font-size: 2.5rem;
   font-family: sans-serif;
+  font-size: 1.75rem;
   font-weight: 600;
+  position: absolute;
   text-align: center;
+  top: 8rem;
+}
+
+.player-turn.X {
+  color: var(--Xcolor);
+}
+
+.player-turn.O {
+  color: var(--Ocolor);
 }
 
 .player-turn.hide {
@@ -331,47 +376,34 @@ body {
 }
 
 .dare-message {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgb(255, 248, 220);
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  background-color: rgb(255, 248, 220);
+  bottom: 0;
   color: var(--playerFontColor);
-  font-size: 2.5rem;
-  font-family: sans-serif;
-  font-weight: 600;
+  display: none;
   flex-direction: column;
+  font-family: sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
 }
 
-/* .dare-message button {
-  font-size: 1.25rem;
-  background-color: var(--playerFontColor);
-  color: #ffff;
-  font-family: sans-serif;
-  padding: 6px;
-  border: 2px solid var(--playerFontColor);
-  border-radius: 5px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex */
-/* } */
-
 .generate-dare-btn {
-  font-size: 1.25rem;
   background-color: var(--playerFontColor);
-  color: #ffff;
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--playerFontColor);
   border-radius: 5px;
-  font-weight: 600;
+  color: #FFF;
   cursor: pointer;
-  display: flex
+  display: flex;
+  font-family: sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 6px;
 }
 
 .generate-dare-btn.hide {
@@ -379,16 +411,16 @@ body {
 }
 
 .end-game-dare-btn {
-  font-size: 1.25rem;
   background-color: var(--playerFontColor);
-  color: #ffff;
-  font-family: sans-serif;
-  padding: 6px;
   border: 2px solid var(--playerFontColor);
   border-radius: 5px;
-  font-weight: 600;
+  color: #FFF;
   cursor: pointer;
-  display: none
+  display: none;
+  font-family: sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 6px;
 }
 
 .end-game-dare-btn.show {
@@ -396,9 +428,9 @@ body {
 }
 
 .dare-message button:hover {
-  background-color: #ffff;
-  color: var(--playerFontColor);
+  background-color: #FFF;
   border: 2px solid var(--playerFontColor);
+  color: var(--playerFontColor);
 }
 
 .dare-message.show {
@@ -410,3 +442,220 @@ body {
 }
 
 
+#text-drop {
+  font-size: 6rem;
+  display: flex;
+  font-family: sans-serif;
+  font-weight: 900;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.tic {
+  animation: drop .4s linear forwards;
+  -webkit-animation: drop .4s linear forwards;
+  -moz-animation: drop .4s linear forwards;
+  -o-animation: drop .4s linear forwards;
+  -ms-animation: drop .4s linear forwards;
+  color: var(--Xcolor);
+  opacity: 0;
+}
+
+.tac {
+  animation: drop .4s linear forwards .2s;
+  -webkit-animation: drop .4s linear forwards .2s;
+  -moz-animation: drop .4s linear forwards .2s;
+  -o-animation: drop .4s linear forwards .2s;
+  -ms-animation: drop .4s linear forwards .2s;
+  color: var(--Ocolor);
+  opacity: 0;
+}
+
+.toe {
+  opacity: 0;
+  animation: drop .4s linear forwards .4s;
+  -webkit-animation: drop .4s linear forwards .4s;
+  -moz-animation: drop .4s linear forwards .4s;
+  -o-animation: drop .4s linear forwards .4s;
+  -ms-animation: drop .4s linear forwards .4s;
+  color: var(--playerFontColor);
+  opacity: 0;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-200px) scaleY(0.9);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: .7;
+  }
+
+  50% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-17px) scaleY(.9);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(-22px) scaleY(.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes drop {
+  0% {
+    transform: translateY(-200px) scaleY(0.9);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: .7;
+  }
+
+  50% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-17px) scaleY(.9);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(-22px) scaleY(.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes drop {
+  0% {
+    transform: translateY(-200px) scaleY(0.9);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: .7;
+  }
+
+  50% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-17px) scaleY(.9);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(-22px) scaleY(.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@-o-keyframes drop {
+  0% {
+    transform: translateY(-200px) scaleY(0.9);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: .7;
+  }
+
+  50% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-17px) scaleY(.9);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(-22px) scaleY(.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes drop {
+  0% {
+    transform: translateY(-200px) scaleY(0.9);
+    opacity: 0;
+  }
+
+  5% {
+    opacity: .7;
+  }
+
+  50% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-17px) scaleY(.9);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(-22px) scaleY(.9);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #text-drop {
+    font-size: 4.25rem;
+  }
+
+  .instructions-text {
+    width: 90%;
+  }
+
+  .cell {
+    height: var(--mobileSize);
+    min-width: var(--mobileSize);
+    padding: calc(var(--mobileSize) * 0.175);
+  }
+
+  .cell svg {
+    height: var(--mobileSize);
+    width: var(--mobileSize);
+  }
+}

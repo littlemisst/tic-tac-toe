@@ -49,7 +49,7 @@ var instructionsElement = document.getElementById("instructions");
 var readyElement = document.getElementById("ready");
 var winningMessageElement = document.getElementById("winningMessage");
 var winnerMessageText = document.querySelector(".winning-message-text");
-var resetBtn = document.getElementById("resetButton");
+var playAgainButton = document.getElementById("resetButton");
 var dareMessageElement = document.getElementById("dareMessage");
 var dareMessageText = document.querySelector(".dare-message-text");
 var dareButton = document.getElementById("generateDare");
@@ -60,6 +60,22 @@ var XDivIcon = XDIV.querySelector(".icon");
 var ODivIcon = ODIV.querySelector(".icon");
 var XDivScore = XDIV.querySelector(".score");
 var ODivScore = ODIV.querySelector(".score");
+function getRandomDare() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("https://api.truthordarebot.xyz/api/dare")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    return [2 /*return*/, data.question];
+            }
+        });
+    });
+}
 var GAME_STARTED = false;
 var playerSymbol = "X";
 var X_SCORE = 0;
@@ -82,27 +98,12 @@ selectFriend === null || selectFriend === void 0 ? void 0 : selectFriend.addEven
 });
 readyElement === null || readyElement === void 0 ? void 0 : readyElement.addEventListener("click", function (event) {
     instructionsElement.classList.remove("show");
+    playerTurnElement.classList.add("X");
     playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
     setTimeout(function () {
         playerTurnElement.classList.add("hide");
     }, 2000);
 });
-function getRandomDare() {
-    return __awaiter(this, void 0, void 0, function () {
-        var response, data;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("https://api.truthordarebot.xyz/api/dare")];
-                case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    data = _a.sent();
-                    return [2 /*return*/, data.question];
-            }
-        });
-    });
-}
 dareButton.addEventListener("click", function (event) {
     getRandomDare().then(function (dareText) {
         dareMessageText.innerText = dareText;
@@ -111,7 +112,6 @@ dareButton.addEventListener("click", function (event) {
     });
 });
 endGameDareButton.addEventListener("click", function (event) {
-    console.log("end game na woooh");
     GAME_STARTED = false;
     playerSymbol = "X";
     result = "";
@@ -130,11 +130,8 @@ endGameDareButton.addEventListener("click", function (event) {
     selectPlayerElement.classList.remove("hide");
     dareMessageElement.classList.remove("show");
     winningMessageElement.classList.remove("show");
-    console.log(selectPlayerElement.classList.remove("hide"));
 });
 endGameButton.addEventListener("click", function (event) {
-    console.log("end game na woooh");
-    // selectPlayerElement.classList.remove("hide")
     GAME_STARTED = false;
     playerSymbol = "X";
     result = "";
@@ -153,7 +150,25 @@ endGameButton.addEventListener("click", function (event) {
     selectPlayerElement.classList.remove("hide");
     dareMessageElement.classList.remove("show");
     winningMessageElement.classList.remove("show");
-    console.log(selectPlayerElement.classList.remove("hide"));
+});
+playAgainButton === null || playAgainButton === void 0 ? void 0 : playAgainButton.addEventListener("click", function (event) {
+    GAME_STARTED = false;
+    winningMessageElement.classList.remove("show");
+    playerSymbol = result === "X" ? "O" : "X";
+    result = "";
+    board = board.map(function (row) { return row.map(function () { return ""; }); });
+    cells.forEach(function (cell) {
+        cell.style.pointerEvents = "all";
+        cell.querySelectorAll("svg").forEach(function (s) {
+            s.style.display = "none";
+            s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
+        });
+    });
+    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
+    playerTurnElement.classList.remove("hide");
+    setTimeout(function () {
+        playerTurnElement.classList.add("hide");
+    }, 2000);
 });
 function startGame() {
     GAME_STARTED = true;
@@ -166,6 +181,14 @@ function endGame() {
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "none";
     });
+    if (playerSymbol === "X") {
+        playerTurnElement.classList.remove("X");
+        playerTurnElement.classList.add("O");
+    }
+    else {
+        playerTurnElement.classList.remove("O");
+        playerTurnElement.classList.add("X");
+    }
 }
 function declareWinner(result) {
     if (result != "DRAW") {
@@ -173,13 +196,20 @@ function declareWinner(result) {
         result === "X"
             ? (XDivScore.innerHTML = String(X_SCORE))
             : (ODivScore.innerHTML = String(O_SCORE));
-        result === "X"
-            ? winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("X")
-            : winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("O");
+        if (result === "X") {
+            winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("X");
+            winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.remove("O");
+        }
+        else {
+            winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.add("O");
+            winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.remove("X");
+        }
         winnerMessageText.innerText = "".concat(result, " is the winner!");
     }
     else if (result === "DRAW") {
         winnerMessageText.innerText = "Draw!";
+        winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.remove("O");
+        winnerMessageText === null || winnerMessageText === void 0 ? void 0 : winnerMessageText.classList.remove("X");
     }
     winningMessageElement === null || winningMessageElement === void 0 ? void 0 : winningMessageElement.classList.add("show");
     if (X_SCORE === 3 || O_SCORE === 3) {
@@ -243,23 +273,4 @@ cells.forEach(function (cell) {
         }
         // add here for computer
     });
-});
-resetBtn === null || resetBtn === void 0 ? void 0 : resetBtn.addEventListener("click", function (event) {
-    GAME_STARTED = false;
-    winningMessageElement.classList.remove("show");
-    playerSymbol = result === "X" ? "O" : "X";
-    result = "";
-    board = board.map(function (row) { return row.map(function () { return ""; }); });
-    cells.forEach(function (cell) {
-        cell.style.pointerEvents = "all";
-        cell.querySelectorAll("svg").forEach(function (s) {
-            s.style.display = "none";
-            s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
-        });
-    });
-    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
-    playerTurnElement.classList.remove("hide");
-    setTimeout(function () {
-        playerTurnElement.classList.add("hide");
-    }, 2000);
 });

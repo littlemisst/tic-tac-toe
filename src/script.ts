@@ -4,7 +4,7 @@ const OSVG = `<svg class="O" xmlns="http://www.w3.org/2000/svg" width="24" heigh
 const XDIV = document.querySelector(".x-score") as HTMLElement;
 const ODIV = document.querySelector(".o-score") as HTMLElement;
 
-let playerTurn = document.querySelector(".player-turn") as HTMLInputElement;
+const playerTurn = document.querySelector(".player-turn") as HTMLInputElement;
 const playerTurnElement = document.getElementById("playerTurn") as HTMLElement;
 
 const select = document.querySelector(".select-player") as HTMLInputElement;
@@ -25,7 +25,9 @@ const winningMessageElement = document.getElementById(
 const winnerMessageText = document.querySelector(
   ".winning-message-text"
 ) as HTMLElement;
-const resetBtn = document.getElementById("resetButton") as HTMLInputElement;
+const playAgainButton = document.getElementById(
+  "resetButton"
+) as HTMLInputElement;
 
 const dareMessageElement = document.getElementById(
   "dareMessage"
@@ -47,6 +49,12 @@ const ODivIcon = ODIV.querySelector(".icon") as HTMLElement;
 
 const XDivScore = XDIV.querySelector(".score") as HTMLElement;
 const ODivScore = ODIV.querySelector(".score") as HTMLElement;
+
+async function getRandomDare() {
+  const response = await fetch("https://api.truthordarebot.xyz/api/dare");
+  const data = await response.json();
+  return data.question;
+}
 
 let GAME_STARTED = false;
 let playerSymbol = "X";
@@ -77,18 +85,14 @@ selectFriend?.addEventListener("click", (event) => {
 readyElement?.addEventListener("click", (event) => {
   instructionsElement.classList.remove("show");
 
+  playerTurnElement.classList.add("X");
+
   playerTurn.innerText = `Player ${playerSymbol} goes first`;
 
   setTimeout(() => {
     playerTurnElement.classList.add("hide");
   }, 2000);
 });
-
-async function getRandomDare() {
-  const response = await fetch("https://api.truthordarebot.xyz/api/dare");
-  const data = await response.json();
-  return data.question;
-}
 
 dareButton.addEventListener("click", (event) => {
   getRandomDare().then((dareText) => {
@@ -99,8 +103,6 @@ dareButton.addEventListener("click", (event) => {
 });
 
 endGameDareButton.addEventListener("click", (event) => {
-  console.log("end game na woooh");
-
   GAME_STARTED = false;
 
   playerSymbol = "X";
@@ -120,18 +122,15 @@ endGameDareButton.addEventListener("click", (event) => {
   X_SCORE = 0;
   O_SCORE = 0;
 
-  XDivScore.innerHTML = String(X_SCORE)
+  XDivScore.innerHTML = String(X_SCORE);
   ODivScore.innerHTML = String(O_SCORE);
 
   selectPlayerElement.classList.remove("hide");
   dareMessageElement.classList.remove("show");
   winningMessageElement.classList.remove("show");
-  console.log(selectPlayerElement.classList.remove("hide"));
 });
 
 endGameButton.addEventListener("click", (event) => {
-  console.log("end game na woooh");
-  // selectPlayerElement.classList.remove("hide")
   GAME_STARTED = false;
 
   playerSymbol = "X";
@@ -151,13 +150,40 @@ endGameButton.addEventListener("click", (event) => {
   X_SCORE = 0;
   O_SCORE = 0;
 
-  XDivScore.innerHTML = String(X_SCORE)
+  XDivScore.innerHTML = String(X_SCORE);
   ODivScore.innerHTML = String(O_SCORE);
 
   selectPlayerElement.classList.remove("hide");
   dareMessageElement.classList.remove("show");
   winningMessageElement.classList.remove("show");
-  console.log(selectPlayerElement.classList.remove("hide"));
+});
+
+playAgainButton?.addEventListener("click", (event) => {
+  GAME_STARTED = false;
+
+  winningMessageElement.classList.remove("show");
+
+  playerSymbol = result === "X" ? "O" : "X";
+
+  result = "";
+
+  board = board.map((row) => row.map(() => ""));
+
+  cells.forEach((cell) => {
+    cell.style.pointerEvents = "all";
+    cell.querySelectorAll("svg").forEach((s) => {
+      s.style.display = "none";
+      s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
+    });
+  });
+
+  playerTurn.innerText = `Player ${playerSymbol} goes first`;
+
+  playerTurnElement.classList.remove("hide");
+
+  setTimeout(() => {
+    playerTurnElement.classList.add("hide");
+  }, 2000);
 });
 
 function startGame() {
@@ -174,6 +200,14 @@ function endGame() {
   cells.forEach((cell) => {
     cell.style.pointerEvents = "none";
   });
+
+  if (playerSymbol === "X") {
+    playerTurnElement.classList.remove("X");
+    playerTurnElement.classList.add("O");
+  } else {
+    playerTurnElement.classList.remove("O");
+    playerTurnElement.classList.add("X");
+  }
 }
 
 function declareWinner(result: string) {
@@ -183,12 +217,19 @@ function declareWinner(result: string) {
       ? (XDivScore.innerHTML = String(X_SCORE))
       : (ODivScore.innerHTML = String(O_SCORE));
 
-    result === "X"
-      ? winnerMessageText?.classList.add("X")
-      : winnerMessageText?.classList.add("O");
+    if (result === "X") {
+      winnerMessageText?.classList.add("X");
+      winnerMessageText?.classList.remove("O");
+    } else {
+      winnerMessageText?.classList.add("O");
+      winnerMessageText?.classList.remove("X");
+    }
+
     winnerMessageText.innerText = `${result} is the winner!`;
   } else if (result === "DRAW") {
     winnerMessageText.innerText = "Draw!";
+    winnerMessageText?.classList.remove("O");
+    winnerMessageText?.classList.remove("X");
   }
 
   winningMessageElement?.classList.add("show");
@@ -266,31 +307,4 @@ cells.forEach((cell: HTMLElement) => {
     }
     // add here for computer
   });
-});
-
-resetBtn?.addEventListener("click", (event) => {
-  GAME_STARTED = false;
-
-  winningMessageElement.classList.remove("show");
-
-  playerSymbol = result === "X" ? "O" : "X";
-
-  result = "";
-
-  board = board.map((row) => row.map(() => ""));
-
-  cells.forEach((cell) => {
-    cell.style.pointerEvents = "all";
-    cell.querySelectorAll("svg").forEach((s) => {
-      s.style.display = "none";
-      s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
-    });
-  });
-
-  playerTurn.innerText = `Player ${playerSymbol} goes first`;
-
-  playerTurnElement.classList.remove("hide");
-  setTimeout(() => {
-    playerTurnElement.classList.add("hide");
-  }, 2000);
 });
