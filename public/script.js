@@ -61,6 +61,22 @@ var ODivIcon = ODIV.querySelector(".icon");
 var XDivScore = XDIV.querySelector(".score");
 var ODivScore = ODIV.querySelector(".score");
 var loading = document.getElementById("loading");
+var GAME_STARTED = false;
+var playerSymbol = "X";
+var X_SCORE = 0;
+var O_SCORE = 0;
+var opponent = "";
+var board = [
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+];
+var result = "";
+var currentPlayer = "";
+XDivIcon.innerHTML = XSVG;
+ODivIcon.innerHTML = OSVG;
+XDIV.style.pointerEvents = "none";
+ODIV.style.pointerEvents = "none";
 function getRandomDare() {
     return __awaiter(this, void 0, void 0, function () {
         var response, data;
@@ -77,46 +93,7 @@ function getRandomDare() {
         });
     });
 }
-var GAME_STARTED = false;
-var playerSymbol = "X";
-var X_SCORE = 0;
-var O_SCORE = 0;
-var opponent = "";
-var board = [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-];
-var result = "";
-XDivIcon.innerHTML = XSVG;
-ODivIcon.innerHTML = OSVG;
-XDIV.style.pointerEvents = "none";
-ODIV.style.pointerEvents = "none";
-selectFriend === null || selectFriend === void 0 ? void 0 : selectFriend.addEventListener("click", function (event) {
-    opponent = "human";
-    selectPlayerElement.classList.add("hide");
-    instructionsElement.classList.add("show");
-});
-readyElement === null || readyElement === void 0 ? void 0 : readyElement.addEventListener("click", function (event) {
-    instructionsElement.classList.remove("show");
-    playerTurnElement.classList.add("X");
-    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
-    setTimeout(function () {
-        playerTurnElement.classList.add("hide");
-    }, 2000);
-});
-dareButton.addEventListener("click", function (event) {
-    dareButton.classList.add("hide");
-    dareMessageText.classList.add("hide");
-    loading.classList.add("show");
-    getRandomDare().then(function (dareText) {
-        dareMessageText.classList.remove("hide");
-        dareMessageText.innerText = dareText;
-        endGameDareButton.classList.add("show");
-        loading.classList.remove("show");
-    });
-});
-endGameDareButton.addEventListener("click", function (event) {
+function endGame() {
     GAME_STARTED = false;
     playerSymbol = "X";
     result = "";
@@ -135,53 +112,14 @@ endGameDareButton.addEventListener("click", function (event) {
     selectPlayerElement.classList.remove("hide");
     dareMessageElement.classList.remove("show");
     winningMessageElement.classList.remove("show");
-});
-endGameButton.addEventListener("click", function (event) {
-    GAME_STARTED = false;
-    playerSymbol = "X";
-    result = "";
-    board = board.map(function (row) { return row.map(function () { return ""; }); });
-    cells.forEach(function (cell) {
-        cell.style.pointerEvents = "all";
-        cell.querySelectorAll("svg").forEach(function (s) {
-            s.style.display = "none";
-            s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
-        });
-    });
-    X_SCORE = 0;
-    O_SCORE = 0;
-    XDivScore.innerHTML = String(X_SCORE);
-    ODivScore.innerHTML = String(O_SCORE);
-    selectPlayerElement.classList.remove("hide");
-    dareMessageElement.classList.remove("show");
-    winningMessageElement.classList.remove("show");
-});
-playAgainButton === null || playAgainButton === void 0 ? void 0 : playAgainButton.addEventListener("click", function (event) {
-    GAME_STARTED = false;
-    winningMessageElement.classList.remove("show");
-    playerSymbol = result === "X" ? "O" : "X";
-    result = "";
-    board = board.map(function (row) { return row.map(function () { return ""; }); });
-    cells.forEach(function (cell) {
-        cell.style.pointerEvents = "all";
-        cell.querySelectorAll("svg").forEach(function (s) {
-            s.style.display = "none";
-            s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
-        });
-    });
-    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
-    playerTurnElement.classList.remove("hide");
-    setTimeout(function () {
-        playerTurnElement.classList.add("hide");
-    }, 2000);
-});
-function startGame() {
+}
+function startRound() {
     GAME_STARTED = true;
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "all";
     });
 }
-function endGame() {
+function endRound() {
     GAME_STARTED = false;
     cells.forEach(function (cell) {
         cell.style.pointerEvents = "none";
@@ -236,7 +174,7 @@ function checkWinner() {
         var isWinning = combinations[i].every(function (element) { return element != "" && element === combinations[i][0]; });
         if (isWinning) {
             result = combinations[i][0];
-            endGame();
+            endRound();
             declareWinner(result);
             return { value: true };
         }
@@ -248,7 +186,7 @@ function checkWinner() {
     }
     if (board.flat().every(function (element) { return element != ""; })) {
         declareWinner("DRAW");
-        endGame();
+        endRound();
     }
     return false;
 }
@@ -257,6 +195,7 @@ function updateBoard(value, row, column) {
 }
 function makeMove(cell, playerSymbol) {
     var _a;
+    currentPlayer = "human";
     cell.style.pointerEvents = "none";
     var svg = cell.querySelector(".".concat(playerSymbol));
     svg.style.display = "block";
@@ -271,11 +210,75 @@ function makeMove(cell, playerSymbol) {
 cells.forEach(function (cell) {
     cell.innerHTML = XSVG + OSVG;
     cell.addEventListener("click", function click(event) {
-        !GAME_STARTED && startGame();
+        !GAME_STARTED && startRound();
         if (opponent === "human") {
             makeMove(event.target, playerSymbol);
             playerSymbol = playerSymbol === "X" ? "O" : "X";
         }
+        else {
+            makeMove(event.target, "O");
+            currentPlayer = "computer";
+            bestMove(cells, board);
+        }
         // add here for computer
     });
+});
+// selecting opponents
+selectFriend.addEventListener("click", function (event) {
+    opponent = "human";
+    selectPlayerElement.classList.add("hide");
+    instructionsElement.classList.add("show");
+});
+selectComputer.addEventListener("click", function () {
+    opponent = "computer";
+    selectPlayerElement.classList.add("hide");
+    bestMove(cells, board);
+});
+// button after reading the instructions for friend opponent
+readyElement.addEventListener("click", function (event) {
+    instructionsElement.classList.remove("show");
+    playerTurnElement.classList.add("X");
+    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
+    setTimeout(function () {
+        playerTurnElement.classList.add("hide");
+    }, 2000);
+});
+// button when a player wins to generate random dare
+dareButton.addEventListener("click", function (event) {
+    dareButton.classList.add("hide");
+    dareMessageText.classList.add("hide");
+    loading.classList.add("show");
+    getRandomDare().then(function (dareText) {
+        dareMessageText.classList.remove("hide");
+        dareMessageText.innerText = dareText;
+        endGameDareButton.classList.add("show");
+        loading.classList.remove("show");
+    });
+});
+// button to end game after the dare is generated
+endGameDareButton.addEventListener("click", function (event) {
+    endGame();
+});
+// global button to abruptly end game
+endGameButton.addEventListener("click", function (event) {
+    endGame();
+});
+playAgainButton.addEventListener("click", function (event) {
+    GAME_STARTED = false;
+    winningMessageElement.classList.remove("show");
+    playerSymbol = result === "X" ? "O" : "X";
+    result = "";
+    board = board.map(function (row) { return row.map(function () { return ""; }); });
+    cells.forEach(function (cell) {
+        cell.style.pointerEvents = "all";
+        cell.querySelectorAll("svg").forEach(function (s) {
+            s.style.display = "none";
+            s.style.strokeDashoffset = s.classList.contains("X") ? "36" : "76";
+        });
+    });
+    playerTurn.innerText = "Player ".concat(playerSymbol, " goes first");
+    playerTurnElement.classList.remove("hide");
+    setTimeout(function () {
+        playerTurnElement.classList.add("hide");
+    }, 2000);
 });
