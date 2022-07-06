@@ -159,7 +159,7 @@ body {
   color: var(--playerFontColor);
   display: flex;
   flex-direction: column;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
   font-weight: 600;
   justify-content: center;
@@ -176,7 +176,7 @@ body {
   border-radius: 0.75rem;
   color: var(--playerFontColor);
   cursor: pointer;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin: 10px;
@@ -240,7 +240,7 @@ body {
   color: var(--playerFontColor);
   display: none;
   flex-direction: column;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   justify-content: center;
@@ -258,7 +258,7 @@ body {
   border-radius: 0.75rem;
   color: var(--playerFontColor);
   cursor: pointer;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   margin: 10px;
@@ -288,7 +288,7 @@ body {
   color: var(--playerFontColor);
   display: none;
   flex-direction: column;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 4rem;
   font-weight: 600;
   justify-content: center;
@@ -305,7 +305,7 @@ body {
   border-radius: 5px;
   color: #FFF;
   cursor: pointer;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   padding: 6px;
@@ -345,7 +345,7 @@ body {
   cursor: pointer;
   font-size: 0.85rem;
   font-size: var(--fontSize);
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
   padding: 6px;
   position: absolute;
@@ -355,7 +355,7 @@ body {
 
 .player-turn {
   display: flex;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.75rem;
   font-weight: 600;
   position: absolute;
@@ -382,7 +382,7 @@ body {
   color: var(--playerFontColor);
   display: none;
   flex-direction: column;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 2.5rem;
   font-weight: 600;
   justify-content: center;
@@ -400,7 +400,7 @@ body {
   color: #FFF;
   cursor: pointer;
   display: flex;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   padding: 6px;
@@ -417,7 +417,7 @@ body {
   color: #FFF;
   cursor: pointer;
   display: none;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   padding: 6px;
@@ -451,7 +451,7 @@ body {
 #text-drop {
   font-size: 6rem;
   display: flex;
-  font-family: sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 900;
   margin-bottom: 2rem;
   margin-left: auto;
@@ -710,4 +710,39 @@ body {
     height: var(--mobileSize);
     width: var(--mobileSize);
   }
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: rgb(32, 32, 32, 0.9);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-family: Arial, Helvetica, sans-serifvetica, sans-serif;
+}
+
+a:link {
+  color: gray;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: gray;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--playerFontColor);
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.github {
+  margin-right: 1rem;
 }
