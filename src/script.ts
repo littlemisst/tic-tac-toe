@@ -17,6 +17,9 @@ const selectComputer = document.getElementById("computer") as HTMLInputElement;
 const instructionsElement = document.getElementById(
   "instructions"
 ) as HTMLElement;
+const instructionText = document.querySelector(
+  ".instructions-text"
+) as HTMLElement;
 const readyElement = document.getElementById("ready") as HTMLInputElement;
 
 const winningMessageElement = document.getElementById(
@@ -231,10 +234,8 @@ cells.forEach((cell: HTMLElement) => {
       playerSymbol = playerSymbol === "X" ? "O" : "X";
     } else {
       makeMove(event.target as HTMLElement, "O");
-      currentPlayer = "computer";
       bestMove(cells, board);
     }
-    // add here for computer
   });
 });
 
@@ -243,12 +244,16 @@ selectFriend.addEventListener("click", (event) => {
   opponent = "human";
   selectPlayerElement.classList.add("hide");
   instructionsElement.classList.add("show");
+  instructionText.innerText = 'The first one who will score 3 points will be the winner. The loser should do a randomly generated dare. Goodluck!';
 });
 
 selectComputer.addEventListener("click", () => {
   opponent = "computer";
   selectPlayerElement.classList.add("hide");
+  instructionsElement.classList.add("show");
   bestMove(cells, board);
+  currentPlayer = "computer"
+  instructionText.innerText = 'This feature is not working properly. You will be encountering a lot of bugs while playing with the computer. Proceed at your own risk. Lol. The developer will soon fix this bug...if she is not being lazy...';
 });
 
 // button after reading the instructions for friend opponent
